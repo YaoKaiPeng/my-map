@@ -2,7 +2,7 @@ import { defineConfig } from 'umi'
 
 export default defineConfig({
   base: '/my-map',
-  publicPath: '/my-map',
+  publicPath: '/my-map/',
   routes: [
     { path: '/', component: 'index' },
     { path: '/docs', component: 'docs' },
