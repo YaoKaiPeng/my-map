@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import * as echarts from 'echarts'
-// 请确保在引入百度地图扩展之前已经引入百度地图 JS API 脚本并成功加载
-// https://api.map.baidu.com/api?v=3.0&ak=你申请的AK
+import _ from 'lodash'
 import 'echarts/extension/bmap/bmap'
 import ReactECharts from 'echarts-for-react'
 import { Input } from 'antd'
@@ -18,9 +16,40 @@ const getData = (text) => {
   })
 }
 
+const colors = ['#8c8c8c', '#95de64', '#f5222d']
+
 export default function HomePage() {
-  const [text1, setText1] = useState('')
-  const [text2, setText2] = useState('')
+  const [text1, setText1] = useState(localStorage.getItem('text1') || '')
+  const [text2, setText2] = useState(localStorage.getItem('text2') || '')
+  const [text3, setText3] = useState(localStorage.getItem('text3') || '')
+
+  const textList = [text1, text2, text3]
+
+  const series = _.map(textList, (text, index) => {
+    return {
+      name: `类别${index + 1}`,
+      type: 'scatter',
+      coordinateSystem: 'bmap',
+      data: getData(text),
+      symbolSize: 10,
+      encode: {
+        value: 2,
+      },
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        show: true,
+      },
+      itemStyle: {
+        color: colors[index],
+      },
+      emphasis: {
+        label: {
+          show: true,
+        },
+      },
+    }
+  })
 
   const option = {
     title: {},
@@ -1209,48 +1238,7 @@ export default function HomePage() {
         ],
       },
     },
-    series: [
-      {
-        name: '类别1',
-        type: 'scatter',
-        coordinateSystem: 'bmap',
-        data: getData(text1),
-        symbolSize: 10,
-        encode: {
-          value: 2,
-        },
-        label: {
-          formatter: '{b}',
-          position: 'right',
-          show: true,
-        },
-        emphasis: {
-          label: {
-            show: true,
-          },
-        },
-      },
-      {
-        name: '类别2',
-        type: 'scatter',
-        coordinateSystem: 'bmap',
-        data: getData(text2),
-        symbolSize: 10,
-        encode: {
-          value: 2,
-        },
-        label: {
-          formatter: '{b}',
-          position: 'right',
-          show: true,
-        },
-        emphasis: {
-          label: {
-            show: true,
-          },
-        },
-      },
-    ],
+    series: series,
   }
 
   return (
@@ -1278,12 +1266,29 @@ export default function HomePage() {
           <div>类别1</div>
           <Input.TextArea
             rows={10}
-            onChange={(e) => setText1(e.target.value)}
+            value={text1}
+            onChange={(e) => {
+              setText1(e.target.value)
+              localStorage.setItem('text1', e.target.value)
+            }}
           />
           <div>类别2</div>
           <Input.TextArea
             rows={10}
-            onChange={(e) => setText2(e.target.value)}
+            value={text2}
+            onChange={(e) => {
+              setText2(e.target.value)
+              localStorage.setItem('text2', e.target.value)
+            }}
+          />
+          <div>类别3</div>
+          <Input.TextArea
+            rows={10}
+            value={text3}
+            onChange={(e) => {
+              setText3(e.target.value)
+              localStorage.setItem('text3', e.target.value)
+            }}
           />
         </div>
       </div>
