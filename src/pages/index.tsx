@@ -16,7 +16,7 @@ const getData = (text) => {
   })
 }
 
-const colors = ['#8c8c8c', '#95de64', '#f5222d']
+const colors = ['#1677ff', '#95de64', '#f5222d']
 
 export default function HomePage() {
   const [text1, setText1] = useState(localStorage.getItem('text1') || '')
